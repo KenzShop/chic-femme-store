@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chic Femme Store | Boutique Officielle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #fffdfd; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .logo-gradient { background: linear-gradient(135deg, #f9a8d4 0%, #f472b6 50%, #a855f7 100%); }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { animation: fadeIn 0.6s ease-out forwards; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+        
+        // --- CONFIGURATION DE VOTRE BOUTIQUE ---
+        const CONFIG = {
+            nomBoutique: "Chic Femme Store",
+            whatsapp: "212669630039", // 212669630039
+            fraisLivraison: 25
+            produits: [
+        { id: 1, image: "https://i.ibb.co/vnn80QK/image.jpg", nom: "Robe Modèle 1" },
+        { id: 2, image: "https://i.ibb.co/xqCTVZP9/image.jpg", nom: "Robe Modèle 2" },
+        { id: 3, image: "https://i.ibb.co/7JGTnwYt/image.jpg", nom: "Robe Modèle 3" },
+        { id: 4, image: "https://i.ibb.co/zVVr6VY0/image.jpg", nom: "Robe Modèle 4" },
+        { id: 5, image: "https://i.ibb.co/ynPHN5V2/image.jpg", nom: "Robe Modèle 5" },
+        { id: 6, image: "https://i.ibb.co/hJX5j3CV/image.jpg", nom: "Robe Modèle 6" },
+        { id: 7, image: "https://i.ibb.co/KjRKXL4k/image.jpg", nom: "Robe Modèle 7" },
+        { id: 8, image: "https://i.ibb.co/SX6L9kZD/image.jpg", nom: "Robe Modèle 8" },
+        { id: 9, image: "https://i.ibb.co/LdtvWGhK/image.jpg", nom: "Robe Modèle 9" },
+        { id: 10, image: "https://i.ibb.co/m5GpGp6D/image.jpg", nom: "Robe Modèle 10" },
+        { id: 11, image: "https://i.ibb.co/8gw83pPs/image.jpg", nom: "Robe Modèle 11" },
+        { id: 12, image: "https://i.ibb.co/j9VW2k2N/image.jpg", nom: "Robe Modèle 12" },
+        { id: 13, image: "https://i.ibb.co/spgRbJkR/image.jpg", nom: "Robe Modèle 13" },
+        { id: 14, image: "https://i.ibb.co/WvRRB8Pc/image.jpg", nom: "Robe Modèle 14" },
+        { id: 15, image: "https://i.ibb.co/KpqwfdK8/image.jpg", nom: "Robe Modèle 15" },
+        { id: 16, image: "https://i.ibb.co/Ld2ZxVtT/image.jpg", nom: "Robe Modèle 16" },
+        { id: 17, image: "https://i.ibb.co/Y4X0FRY1/image.jpg", nom: "Robe Modèle 17" },
+        { id: 18, image: "https://i.ibb.co/hpmYyVY/image.jpg", nom: "Robe Modèle 18" },
+        { id: 19, image: "https://i.ibb.co/Z1VsRQgh/image.jpg", nom: "Robe Modèle 19" },
+        { id: 20, image: "https://i.ibb.co/B2qXRfTJ/image.jpg", nom: "Robe Modèle 20" }
+    ]
+        };
+
+        // Composant Icon personnalisé utilisant SVG (pour éviter les erreurs de bibliothèque externe)
+        const Icon = ({ name, size = 24, className = "" }) => {
+            const icons = {
+                shoppingBag: (
+                    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
+                    </svg>
+                ),
+                camera: (
+                    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/>
+                    </svg>
+                ),
+                messageCircle: (
+                    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>
+                    </svg>
+                ),
+                chevronRight: (
+                    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="m9 18 6-6-6-6"/>
+                    </svg>
+                ),
+                truck: (
+                    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-2.035-2.712A1 1 0 0 0 18.91 9H15"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>
+                    </svg>
+                )
+            };
+            return <span className={`inline-block ${className}`}>{icons[name] || null}</span>;
+        };
+
+        const App = () => {
+            const [isAdminMode, setIsAdminMode] = useState(false);
+            const [products, setProducts] = useState([
+                {
+                    id: 1,
+                    name: "Robe Élégante",
+                    description: "Coupe fluide et design chic pour sublimer votre silhouette en toute occasion.",
+                    price: 249,
+                    tag: "Populaire",
+                    image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&q=80&w=400"
+                },
+                {
+                    id: 2,
+                    name: "Pack Sac & Sandales",
+                    description: "L'ensemble parfait pour une allure complète, moderne et très tendance.",
+                    price: 249,
+                    tag: "Offre Spéciale",
+                    image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&q=80&w=400"
+                }
+            ]);
+
+            const [editingId, setEditingId] = useState(null);
+            const [tempUrl, setTempUrl] = useState("");
+
+            const commanderWhatsApp = (produit) => {
+                const message = `Bonjour ${CONFIG.nomBoutique}, je souhaite commander le produit suivant :\n\n*Produit :* ${produit.name}\n*Prix :* ${produit.price} DH\n*Livraison :* ${CONFIG.fraisLivraison} DH\n*Total :* ${produit.price + CONFIG.fraisLivraison} DH\n\nMerci de me confirmer la disponibilité.`;
+                const encodedMessage = encodeURIComponent(message);
+                window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodedMessage}`, '_blank');
+            };
+
+            const saveNewImage = (id) => {
+                if (tempUrl.trim() !== "") {
+                    setProducts(products.map(p => p.id === id ? { ...p, image: tempUrl } : p));
+                }
+                setEditingId(null);
+                setTempUrl("");
+            };
+
+            return (
+                <div className="pb-32">
+                    {/* Bannière de livraison */}
+                    <div className="logo-gradient py-2.5 text-center text-white text-[10px] font-bold tracking-[0.2em] uppercase shadow-sm">
+                        <div className="flex justify-center items-center gap-2">
+                            <Icon name="truck" size={14} />
+                            Livraison Partout au Maroc — {CONFIG.fraisLivraison} DH
+                        </div>
+                    </div>
+
+                    {/* Navigation */}
+                    <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-pink-50 h-20 flex items-center px-6 justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="logo-gradient w-11 h-11 rounded-full flex items-center justify-center border-2 border-white shadow-md">
+                                <span className="text-white font-serif font-bold text-base tracking-tighter">CF</span>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="font-serif font-bold text-xl leading-tight">Chic Femme</span>
+                                <span className="text-gray-400 text-[10px] tracking-[0.3em] uppercase font-semibold">Store</span>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <button className="p-2.5 bg-pink-50 text-pink-600 rounded-full relative hover:bg-pink-100 transition-colors">
+                                <Icon name="shoppingBag" size={20} />
+                                <span className="absolute -top-1 -right-1 bg-gray-900 text-white text-[9px] w-4.5 h-4.5 rounded-full flex items-center justify-center font-bold">2</span>
+                            </button>
+                        </div>
+                    </nav>
+
+                    {/* En-tête Hero */}
+                    <header className="py-20 px-6 text-center bg-gradient-to-b from-pink-50/50 to-transparent">
+                        <span className="inline-block px-4 py-1.5 rounded-full bg-pink-100 text-pink-600 text-[10px] font-black uppercase tracking-widest mb-6">Collection 2024</span>
+                        <h1 className="text-4xl md:text-6xl font-serif font-bold text-gray-900 mb-6 leading-tight">Votre Élégance,<br/>Notre Passion.</h1>
+                        <p className="text-gray-400 italic text-sm max-w-sm mx-auto">Chaque pièce est sélectionnée pour vous faire rayonner au quotidien.</p>
+                    </header>
+
+                    {/* Liste des Produits */}
+                    <main className="max-w-5xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16">
+                        {products.map(product => (
+                            <div key={product.id} className="group animate-fade-in">
+                                <div className="relative aspect-[4/5] bg-neutral-100 rounded-[3rem] overflow-hidden shadow-sm border border-pink-50 mb-8">
+                                    <img src={product.image} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt={product.name} />
+                                    
+                                    {isAdminMode && (
+                                        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-8">
+                                            {editingId === product.id ? (
+                                                <div className="bg-white p-6 rounded-3xl w-full shadow-2xl">
+                                                    <p className="text-[10px] font-bold text-gray-400 uppercase mb-3">Lien de la photo :</p>
+                                                    <input 
+                                                        type="text" 
+                                                        value={tempUrl} 
+                                                        onChange={(e) => setTempUrl(e.target.value)}
+                                                        className="w-full p-3 bg-gray-50 border border-gray-100 rounded-xl text-xs mb-4 outline-none focus:ring-2 focus:ring-pink-300"
+                                                        placeholder="https://..."
+                                                    />
+                                                    <div className="flex gap-2">
+                                                        <button onClick={() => saveNewImage(product.id)} className="flex-1 bg-green-500 text-white py-3 rounded-xl text-xs font-bold">Enregistrer</button>
+                                                        <button onClick={() => setEditingId(null)} className="flex-1 bg-gray-100 text-gray-500 py-3 rounded-xl text-xs font-bold">Annuler</button>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <button onClick={() => {setEditingId(product.id); setTempUrl(product.image);}} className="bg-white px-8 py-4 rounded-full font-bold text-sm flex items-center gap-3 shadow-xl transform transition-transform hover:scale-105">
+                                                    <Icon name="camera" size={20} className="text-pink-500" /> Modifier la photo
+                                                </button>
+                                            )}
+                                        </div>
+                                    )}
+                                    <div className="absolute top-8 left-8 bg-white/95 backdrop-blur-sm px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-lg">
+                                        {product.tag}
+                                    </div>
+                                </div>
+
+                                <div className="text-center px-4">
+                                    <h3 className="text-2xl font-serif font-bold mb-3">{product.name}</h3>
+                                    <p className="text-gray-400 text-sm mb-8 leading-relaxed italic">"{product.description}"</p>
+                                    
+                                    <div className="flex flex-col items-center gap-6">
+                                        <div className="flex flex-col">
+                                            <span className="text-4xl font-black text-gray-900 leading-none">{product.price} <small className="text-sm font-bold uppercase tracking-widest">DH</small></span>
+                                            <span className="text-pink-500 text-[10px] font-black uppercase tracking-widest mt-2">+ {CONFIG.fraisLivraison} DH Livraison</span>
+                                        </div>
+                                        
+                                        <button 
+                                            onClick={() => commanderWhatsApp(product)}
+                                            className="w-full max-w-[280px] bg-gray-900 text-white py-5 rounded-[2rem] font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-pink-600 transition-all shadow-xl hover:shadow-pink-200"
+                                        >
+                                            <Icon name="messageCircle" size={18} />
+                                            Commander via WhatsApp
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </main>
+
+                    {/* Panneau de contrôle Admin fixe */}
+                    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100]">
+                        <div className="bg-gray-900/95 backdrop-blur-xl text-white px-8 py-4 rounded-full shadow-2xl flex items-center gap-6 border border-white/10">
+                            <div className="flex flex-col">
+                                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-pink-400">Administration</span>
+                                <span className="text-[10px] text-gray-400 font-medium">Modifier les visuels</span>
+                            </div>
+                            <button 
+                                onClick={() => setIsAdminMode(!isAdminMode)}
+                                className={`relative w-14 h-7 rounded-full transition-all duration-500 ${isAdminMode ? 'bg-pink-500 shadow-[0_0_15px_rgba(236,72,153,0.5)]' : 'bg-gray-700'}`}
+                            >
+                                <div className={`absolute top-1 left-1 bg-white w-5 h-5 rounded-full shadow-sm transition-transform duration-500 ${isAdminMode ? 'translate-x-7' : ''}`}></div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <footer className="mt-32 py-16 border-t border-pink-50 bg-pink-50/20 text-center">
+                        <div className="flex items-center gap-3 justify-center mb-8">
+                            <div className="logo-gradient w-8 h-8 rounded-full flex items-center justify-center">
+                                <span className="text-white font-serif font-bold text-[10px]">CF</span>
+                            </div>
+                            <span className="font-serif font-bold text-lg uppercase tracking-widest">Chic Femme Store</span>
+                        </div>
+                        <p className="text-[10px] text-gray-400 font-bold tracking-[0.4em] uppercase">Maroc — Service Client 7j/7</p>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
